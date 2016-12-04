@@ -1,0 +1,78 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="style1.css">
+<title>Sense Hat Informations</title>
+<script type="text/javascript">
+	var jsondata;
+	//var jsontext;
+	function get_data(){
+		var xmlhttp=new XMLHttpRequest();
+		xmlhttp.onreadystatechange=function(){
+			if (xmlhttp.readyState==4 && xmlhttp.status==200){
+				jsondata=JSON.parse(xmlhttp.responseText);
+				//jsontext=JSON.stringify(jsondata);
+				//---delete all rows except header---//
+				var table = document.getElementById("MainTable");
+				var rowcount = table.rows.length;
+				for (var j=1;j<rowcount;j++){table.deleteRow(1);}
+				//---add data in table---//
+				for (var i=0;i<jsondata.data.length;i++){
+					//document.getElementById("Time1").innerHTML=jsondata.data[i].time;
+					var u = jsondata.data;
+					var tab = document.getElementById("MainTable");
+					var rows = tab.rows;
+					var row1 = tab.insertRow(1);
+					row1.insertCell(0).innerHTML="&nbsp;"+u[i].time;
+					row1.insertCell(1).innerHTML="&nbsp;"+u[i].temperature;
+					row1.insertCell(2).innerHTML="&nbsp;"+u[i].pressure;
+					row1.insertCell(3).innerHTML="&nbsp;"+u[i].humidity;
+				}
+			}
+		}
+		xmlhttp.open("GET","/data",true);
+		xmlhttp.send();
+	}
+	</script>
+</head>
+<body>	
+	<h2>Sense Hat Informations</h2>
+	<div>
+	<button onclick="get_data()">Get Data</button>
+	<table id="MainTable" width="100%" border="0" cellspacing="0" cellpadding="0" class="table0">
+		<tr>
+			<th>&nbsp;<b>Time</b></th>
+			<th>&nbsp;<b>Temperature</b></th>
+			<th>&nbsp;<b>Pressure</b></th>
+			<th>&nbsp;<b>Humidity</b></th>
+		</tr>
+	</table>
+	</div>
+	
+	<div>
+	<button onclick="get_Chart()">Get Chart</button>
+	<canvas id="canvas"></canvas>
+	</div>
+	<script src="Chart.js">
+	function get_Chart(){
+		//---test code for Chart.js---//
+		var lineChartData = {
+			labels : ["12:30:15","12:30:25","12:30:35","12:30:45","12:30:55","12:31:05","12:31:15"],
+			datasets : [
+			{
+				fillColor : "rgba(151,187,205,0)",
+				strokeColor : "rgba(151,187,205,1)",
+				pointColor : "rgba(151,187,205,1)",
+				pointStrokeColor : "#fff",
+				data : [27.6,26.98,26.44,27.121,27.4,26.955,26.66]
+			}
+			]   
+		}
+		var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Line(lineChartData);
+	}
+	</script>
+	
+</body>
+</html>
+	
+	
+	
